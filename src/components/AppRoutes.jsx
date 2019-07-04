@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Homepage from 'Homepage';
+import Homepage from 'pages/Homepage';
 
 export default function AppRoutes() {
   return (

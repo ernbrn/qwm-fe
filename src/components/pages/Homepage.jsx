@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-import Login from 'Login';
 
 export default function Homepage() {
   return (
@@ -12,11 +11,8 @@ export default function Homepage() {
       </Grid>
       <Grid item>
         <Typography variant="body2" align="center">
-          This won't always be right here like some weird gate keeper, but please sign in!
+          More things soon
         </Typography>
-      </Grid>
-      <Grid item>
-        <Login />
       </Grid>
     </Grid>
   );
