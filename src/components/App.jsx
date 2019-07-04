@@ -1,20 +1,24 @@
 import React from 'react';
 import CenteredAppContainer from 'shared/CenteredAppContainer';
-import { Typography } from '@material-ui/core';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import configureStore, { history } from 'configureStore';
+import AppRoutes from 'AppRoutes';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import HeaderBar from 'HeaderBar';
 
 export default function App() {
   return (
-    <Provider store={configureStore()}>
-      <ConnectedRouter history={history}>
-        <CenteredAppContainer>
-          <Typography variant="h2" component="h1" align="center">
-            Hello World!
-          </Typography>
-        </CenteredAppContainer>
-      </ConnectedRouter>
-    </Provider>
+    <React.Fragment>
+      <CssBaseline />
+      <Provider store={configureStore()}>
+        <ConnectedRouter history={history}>
+          <HeaderBar />
+          <CenteredAppContainer>
+            <AppRoutes />
+          </CenteredAppContainer>
+        </ConnectedRouter>
+      </Provider>
+    </React.Fragment>
   );
 }
