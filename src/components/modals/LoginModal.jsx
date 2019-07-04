@@ -31,7 +31,6 @@ function LoginModal({ dispatchSignInSuccess, signedIn }) {
 
   function onSubmit(user) {
     return signIn(user).then(
-      // do something else
       (data) => {
         dispatchSignInSuccess(data);
         handleClose();
