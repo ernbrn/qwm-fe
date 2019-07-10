@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import WorkForm from 'WorkForm';
+import WorkForm from 'work-form/WorkForm';
 
 export default function Homepage() {
   return (

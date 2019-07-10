@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { getWorkTypesSuccess } from 'work-types/work-types.actions';
 import { getWorkTypes, postWorkTypes } from 'work-types/work-types.service';
 import { postWorks } from 'works/works.service';
+import CreatorSelect from './CreatorSelect';
 
 // const useStyles = makeStyles(() => ({
 // }));
@@ -42,28 +43,29 @@ class WorkForm extends React.Component {
   }
 
   onSubmit = (formData) => {
+    console.log(formData);
     const data = { ...formData };
 
     if (data.work_type_id !== ADD_WORK_TYPE_VALUE) {
       delete data.workTypeName;
     }
 
-    if (data.workTypeName) {
-      return postWorkTypes({ name: data.workTypeName }).then(response => postWorks({
-        title: data.title,
-        work_type_id: response.data.id,
-        // attn post through users so as not to have to do this
-        // slash api will know who the current user is and assign
-        contributor_id: 4,
-      }).then(workResponse => console.log(workResponse)));
-    }
+    // if (data.workTypeName) {
+    //   return postWorkTypes({ name: data.workTypeName }).then(response => postWorks({
+    //     title: data.title,
+    //     work_type_id: response.data.id,
+    //     // attn post through users so as not to have to do this
+    //     // slash api will know who the current user is and assign
+    //     contributor_id: 4,
+    //   }).then(workResponse => console.log(workResponse)));
+    // }
 
-    return postWorks({
-      ...data,
-      // attn post through users so as not to have to do this
-      // slash api will know who the current user is and assign
-      contributor_id: 4,
-    });
+    // return postWorks({
+    //   ...data,
+    //   // attn post through users so as not to have to do this
+    //   // slash api will know who the current user is and assign
+    //   contributor_id: 4,
+    // });
   };
 
   render() {
@@ -122,6 +124,13 @@ class WorkForm extends React.Component {
                       </Field>
                     </Grid>
                   )}
+                  <Grid item xs={12}>
+                    <Field
+                      name="creator"
+                      component={CreatorSelect}
+                      placeholder="Search for a creator"
+                    />
+                  </Grid>
                   <Grid item>
                     <Button type="submit" color="primary" variant="contained">
                       Submit
