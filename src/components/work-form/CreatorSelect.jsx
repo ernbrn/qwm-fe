@@ -10,16 +10,13 @@ export default function CreatorSelect({ input, meta, placeholder }) {
   const itemToString = item => item || '';
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
   function fakePI(inputValue) {
-    if (typeof inputValue === 'string') {
-      return new Promise(resolve => setTimeout(() => {
-        setItems([{ id: 1, name: 'Sarah Waters' }, { id: 2, name: 'Someone else' }]);
-        return resolve;
-      }, 300));
-    }
-
-    return null;
+    return new Promise(resolve => setTimeout(() => {
+      setItems([{ id: 1, name: 'Sarah Waters' }, { id: 2, name: 'Someone else' }]);
+      return resolve;
+    }, 300));
   }
 
   const { onChange, ...restInput } = input;
@@ -27,39 +24,33 @@ export default function CreatorSelect({ input, meta, placeholder }) {
   return (
     <Downshift
       {...restInput}
-      onInputValueChange={(inputValue) => {
-        fakePI(inputValue);
+      inputValue={inputValue}
+      onInputValueChange={(inputChange) => {
+        if (typeof inputChange === 'string') {
+          setInputValue(inputChange);
+          fakePI(inputChange);
+        }
       }}
       itemToString={itemToString}
       selectedItem={input.value}
       onSelect={(selectValue) => {
-        setSelectedItems((prevState) => {
-          const allSelected = [...prevState, selectValue];
-          onChange(allSelected);
-          return allSelected;
-        });
+        if (selectValue) {
+          setInputValue('');
+          setSelectedItems((prevState) => {
+            const allSelected = [...prevState, selectValue];
+            onChange(allSelected);
+
+            return allSelected;
+          });
+        }
       }}
     >
       {({
-        getInputProps,
-        getItemProps,
-        getLabelProps,
-        getMenuProps,
-        highlightedIndex,
-        inputValue,
-        isOpen,
-        selectedItem,
+        getInputProps, getItemProps, getLabelProps, getMenuProps, highlightedIndex, isOpen,
       }) => {
-        let value = inputValue || '';
-
-        if (selectedItem) {
-          value = '';
-        }
-
         const { onBlur, onFocus, ...inputProps } = getInputProps({
           name: input.name,
           placeholder,
-          value,
         });
 
         const handleDelete = selectedCreatorId => () => {
@@ -72,9 +63,10 @@ export default function CreatorSelect({ input, meta, placeholder }) {
 
         return (
           <div>
-            {selectedItems.map(si => (
-              <Chip key={si.id} label={si.name} onDelete={handleDelete(si.id)} />
-            ))}
+            {selectedItems
+              && selectedItems.map(si => (
+                <Chip key={si.id} label={si.name} onDelete={handleDelete(si.id)} />
+              ))}
             <TextField
               InputLabelProps={getLabelProps({ shrink: true })}
               InputProps={{ onBlur, onFocus }}
