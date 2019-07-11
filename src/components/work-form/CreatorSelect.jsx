@@ -1,32 +1,44 @@
 import React, { useState } from 'react';
 import Downshift from 'downshift';
-import { MenuItem, Paper, TextField } from '@material-ui/core';
+import {
+  Chip, MenuItem, Paper, TextField,
+} from '@material-ui/core';
 
-export default function CreatorSelect({
-  input, meta, placeholder, ...rest
-}) {
+export default function CreatorSelect({ input, meta, placeholder }) {
   const NO_RESULTS = 'Add creator';
 
   const itemToString = item => item || '';
   const [items, setItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  function fakePI(ms = 300) {
-    return new Promise(resolve => setTimeout(() => {
-      setItems([]);
-      return resolve;
-    }));
+  function fakePI(inputValue) {
+    if (typeof inputValue === 'string') {
+      return new Promise(resolve => setTimeout(() => {
+        setItems([{ id: 1, name: 'Sarah Waters' }, { id: 2, name: 'Someone else' }]);
+        return resolve;
+      }, 300));
+    }
+
+    return null;
   }
+
+  const { onChange, ...restInput } = input;
 
   return (
     <Downshift
-      {...input}
+      {...restInput}
       onInputValueChange={(inputValue) => {
-        console.log(inputValue);
-        input.onChange(inputValue);
-        fakePI();
+        fakePI(inputValue);
       }}
       itemToString={itemToString}
       selectedItem={input.value}
+      onSelect={(selectValue) => {
+        setSelectedItems((prevState) => {
+          const allSelected = [...prevState, selectValue];
+          onChange(allSelected);
+          return allSelected;
+        });
+      }}
     >
       {({
         getInputProps,
@@ -38,13 +50,31 @@ export default function CreatorSelect({
         isOpen,
         selectedItem,
       }) => {
+        let value = inputValue || '';
+
+        if (selectedItem) {
+          value = '';
+        }
+
         const { onBlur, onFocus, ...inputProps } = getInputProps({
           name: input.name,
           placeholder,
+          value,
         });
+
+        const handleDelete = selectedCreatorId => () => {
+          setSelectedItems((prevState) => {
+            const newSelectedItems = prevState.filter(i => i.id !== selectedCreatorId);
+            onChange(newSelectedItems);
+            return newSelectedItems;
+          });
+        };
 
         return (
           <div>
+            {selectedItems.map(si => (
+              <Chip key={si.id} label={si.name} onDelete={handleDelete(si.id)} />
+            ))}
             <TextField
               InputLabelProps={getLabelProps({ shrink: true })}
               InputProps={{ onBlur, onFocus }}
@@ -58,12 +88,12 @@ export default function CreatorSelect({
                   {items.length > 0 ? (
                     items.map((item, index) => (
                       <MenuItem
-                        key={item}
+                        key={item.id}
                         {...getItemProps({ item })}
                         selected={highlightedIndex === index}
                         component="div"
                       >
-                        {item}
+                        {item.name}
                       </MenuItem>
                     ))
                   ) : (
