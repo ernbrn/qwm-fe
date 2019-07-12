@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Downshift from 'downshift';
 import {
   Chip, MenuItem, Paper, TextField,
 } from '@material-ui/core';
+import { throttle } from 'throttle-debounce';
+import { getCreators } from 'creators/creators.service';
 
 export default function CreatorSelect({ input, meta, placeholder }) {
   const NO_RESULTS = 'addCreator';
@@ -14,13 +16,13 @@ export default function CreatorSelect({ input, meta, placeholder }) {
   const [inputValue, setInputValue] = useState('');
   const { onChange, ...restInput } = input;
 
-  function fakePI(inputValue) {
-    // TODO: debounce
-    return new Promise(resolve => setTimeout(() => {
-      setItems([{ id: 1, name: 'Sarah Waters' }, noResultsItem]);
-      return resolve;
-    }, 300));
+  function searchCreators(inputChange) {
+    return getCreators({ name: inputChange }).then((response) => {
+      setItems([...response.data, noResultsItem]);
+    });
   }
+
+  const throttleSearch = useRef(throttle(500, searchCreators)).current;
 
   function handleSelection(selectValue) {
     setInputValue('');
@@ -57,7 +59,7 @@ export default function CreatorSelect({ input, meta, placeholder }) {
       onInputValueChange={(inputChange) => {
         if (typeof inputChange === 'string') {
           setInputValue(inputChange);
-          fakePI(inputChange);
+          throttleSearch(inputChange);
         }
       }}
       itemToString={itemToString}
