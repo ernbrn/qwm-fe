@@ -2,16 +2,29 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import {
-  Chip, MenuItem, Paper, TextField,
+  MenuItem, Popover, Paper, TextField,
 } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
 import { getCreators, postCreators } from 'creators/creators.service';
 import CreatorModal from 'creator-form/CreatorModal';
 import SelectedItems from 'shared/multi-select/SelectedItems';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(({ spacing }) => ({
+  selectedItems: {
+    marginBottom: spacing(2),
+  },
+  listbox: {
+    position: 'absolute',
+    zIndex: 1,
+  },
+  boop: {
+    width: '100px',
+  },
+}));
 
 export default function CreatorSelect({ input, placeholder }) {
   const ADD_CREATOR = 'addCreator';
-
   const itemToString = item => item || '';
   const noResultsItem = { id: ADD_CREATOR, name: 'Add new creator' };
   const [items, setItems] = useState([]);
@@ -19,6 +32,7 @@ export default function CreatorSelect({ input, placeholder }) {
   const [inputValue, setInputValue] = useState('');
   const [addCreatorModalOpen, setAddCreatorModalOpen] = useState(false);
   const { onChange, ...restInput } = input;
+  const classes = useStyles();
 
   function searchCreators(inputChange) {
     // Don't get all creators if there's no value
@@ -116,11 +130,13 @@ export default function CreatorSelect({ input, placeholder }) {
 
           return (
             <div>
-              <div>
-                {selectedItems && (
-                  <SelectedItems selectedItems={selectedItems} handleDelete={handleDelete} />
-                )}
-              </div>
+              {selectedItems.length > 0 && (
+                <SelectedItems
+                  selectedItems={selectedItems}
+                  handleDelete={handleDelete}
+                  className={classes.selectedItems}
+                />
+              )}
               <TextField
                 InputLabelProps={getLabelProps({ shrink: true })}
                 InputProps={{ onBlur, onFocus }}
@@ -128,7 +144,7 @@ export default function CreatorSelect({ input, placeholder }) {
                 fullWidth
                 label="Creator"
               />
-              <div {...getMenuProps()}>
+              <div {...getMenuProps()} className={classes.listbox}>
                 {isOpen && (
                   <Paper square>
                     {items.map((item, index) => (
