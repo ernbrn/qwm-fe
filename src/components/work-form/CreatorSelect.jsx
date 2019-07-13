@@ -78,6 +78,7 @@ export default function CreatorSelect({ input, placeholder }) {
       />
       <Downshift
         {...restInput}
+        defaultHighlightedIndex={0}
         inputValue={inputValue}
         onInputValueChange={(inputChange) => {
           // When you select an item, the inputChange
