@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  AppBar, Dialog, Slide, Typography, Toolbar, IconButton,
+  Dialog, DialogTitle, DialogContent, Slide, Grid,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
 import CreatorForm from './CreatorForm';
 
-const useStyles = makeStyles(() => ({
-  title: {
-    flexGrow: 1,
+const useStyles = makeStyles(({ spacing }) => ({
+  content: {
+    padding: spacing(4),
   },
 }));
 
@@ -19,16 +18,15 @@ export default function CreatorModal({ open, handleClose, onSubmit }) {
   const classes = useStyles();
 
   return (
-    <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-      <AppBar color="default">
-        <Toolbar>
-          <Typography className={classes.title}>Add a creator</Typography>
-          <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="Close">
-            <CloseIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <CreatorForm onSubmit={onSubmit} />
+    <Dialog fullWidth open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <DialogTitle>Add a creator</DialogTitle>
+      <DialogContent className={classes.content}>
+        <Grid container spacing={4} justify="center">
+          <Grid item>
+            <CreatorForm onSubmit={onSubmit} onCancel={handleClose} />
+          </Grid>
+        </Grid>
+      </DialogContent>
     </Dialog>
   );
 }
