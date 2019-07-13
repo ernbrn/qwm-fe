@@ -1,22 +1,30 @@
 import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import {
   Chip, MenuItem, Paper, TextField,
 } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
-import { getCreators } from 'creators/creators.service';
+import { getCreators, postCreators } from 'creators/creators.service';
+import CreatorModal from 'creator-form/CreatorModal';
 
-export default function CreatorSelect({ input, meta, placeholder }) {
-  const NO_RESULTS = 'addCreator';
+export default function CreatorSelect({ input, placeholder }) {
+  const ADD_CREATOR = 'addCreator';
 
   const itemToString = item => item || '';
-  const noResultsItem = { id: NO_RESULTS, name: 'Add new creator' };
+  const noResultsItem = { id: ADD_CREATOR, name: 'Add new creator' };
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [addCreatorModalOpen, setAddCreatorModalOpen] = useState(false);
   const { onChange, ...restInput } = input;
 
   function searchCreators(inputChange) {
+    // Don't get all creators if there's no value
+    if (!inputChange) {
+      return null;
+    }
+
     return getCreators({ name: inputChange }).then((response) => {
       setItems([...response.data, noResultsItem]);
     });
@@ -25,18 +33,16 @@ export default function CreatorSelect({ input, meta, placeholder }) {
   const throttleSearch = useRef(throttle(500, searchCreators)).current;
 
   function handleSelection(selectValue) {
+    // On selection, clear out the input value to reset the search
     setInputValue('');
 
-    if (selectValue.id === NO_RESULTS) {
-      console.log('here');
-      // set some state to add a creator input or something
-      // or pop a modal open????
+    if (selectValue.id === ADD_CREATOR) {
+      setAddCreatorModalOpen(true);
       return;
     }
 
     setSelectedItems((prevState) => {
-      // remove the duplicate if the incoming one is a dupe
-      // there's gotta be a better way to do this
+      // TODO: this might could use a refactor to something more efficent
       const allSelected = [...prevState.filter(i => i.id !== selectValue.id), selectValue];
       onChange(allSelected);
 
@@ -52,67 +58,98 @@ export default function CreatorSelect({ input, meta, placeholder }) {
     });
   };
 
-  return (
-    <Downshift
-      {...restInput}
-      inputValue={inputValue}
-      onInputValueChange={(inputChange) => {
-        if (typeof inputChange === 'string') {
-          setInputValue(inputChange);
-          throttleSearch(inputChange);
-        }
-      }}
-      itemToString={itemToString}
-      selectedItem={input.value}
-      onSelect={(selectValue) => {
-        // check for selectValue
-        // if you press esc when the menu is open
-        // selectValue will be undefined and break EVERYTHING
-        if (selectValue) {
-          handleSelection(selectValue);
-        }
-      }}
-    >
-      {({
-        getInputProps, getItemProps, getLabelProps, getMenuProps, highlightedIndex, isOpen,
-      }) => {
-        const { onBlur, onFocus, ...inputProps } = getInputProps({
-          name: input.name,
-          placeholder,
-        });
+  function onCreatorSubmit(formData) {
+    return postCreators(formData).then((response) => {
+      setAddCreatorModalOpen(false);
+      handleSelection(response.data);
+    });
+  }
 
-        return (
-          <div>
-            {selectedItems
-              && selectedItems.map(si => (
-                <Chip key={si.id} label={si.name} onDelete={handleDelete(si.id)} />
-              ))}
-            <TextField
-              InputLabelProps={getLabelProps({ shrink: true })}
-              InputProps={{ onBlur, onFocus }}
-              {...inputProps}
-              fullWidth
-              label="Creator"
-            />
-            <div {...getMenuProps()}>
-              {isOpen && (
-                <Paper square>
-                  {items.map((item, index) => (
-                    <MenuItem
-                      key={item.id}
-                      {...getItemProps({ item })}
-                      selected={highlightedIndex === index}
-                      component="div"
-                    >
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Paper>
-              )}
+  function handleCreatorModalClose() {
+    setAddCreatorModalOpen(false);
+  }
+
+  return (
+    <React.Fragment>
+      <CreatorModal
+        onSubmit={onCreatorSubmit}
+        open={addCreatorModalOpen}
+        handleClose={handleCreatorModalClose}
+      />
+      <Downshift
+        {...restInput}
+        inputValue={inputValue}
+        onInputValueChange={(inputChange) => {
+          // When you select an item, the inputChange
+          // becomes the object selected, so don't set
+          // that as the input
+          if (typeof inputChange === 'string') {
+            setInputValue(inputChange);
+            throttleSearch(inputChange);
+          }
+        }}
+        itemToString={itemToString}
+        selectedItem={input.value}
+        onSelect={(selectValue) => {
+          // Make sure selectValue is something.
+          // If you press esc when the menu is open
+          // selectValue will be undefined and break EVERYTHING
+          if (selectValue) {
+            handleSelection(selectValue);
+          }
+        }}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          getLabelProps,
+          getMenuProps,
+          highlightedIndex,
+          isOpen,
+        }) => {
+          const { onBlur, onFocus, ...inputProps } = getInputProps({
+            name: input.name,
+            placeholder,
+          });
+
+          return (
+            <div>
+              {selectedItems
+                && selectedItems.map(si => (
+                  <Chip key={si.id} label={si.name} onDelete={handleDelete(si.id)} />
+                ))}
+              <TextField
+                InputLabelProps={getLabelProps({ shrink: true })}
+                InputProps={{ onBlur, onFocus }}
+                {...inputProps}
+                fullWidth
+                label="Creator"
+              />
+              <div {...getMenuProps()}>
+                {isOpen && (
+                  <Paper square>
+                    {items.map((item, index) => (
+                      <MenuItem
+                        key={item.id}
+                        {...getItemProps({ item })}
+                        selected={highlightedIndex === index}
+                        component="div"
+                      >
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Paper>
+                )}
+              </div>
             </div>
-          </div>
-        );
-      }}
-    </Downshift>
+          );
+        }}
+      </Downshift>
+    </React.Fragment>
   );
 }
+
+CreatorSelect.propTypes = {
+  input: PropTypes.shape({}).isRequired,
+  placeholder: PropTypes.string.isRequired,
+};
