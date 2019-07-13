@@ -80,7 +80,14 @@ class WorkForm extends React.Component {
                   <Grid item xs={12}>
                     <Field name="title">
                       {({ input }) => (
-                        <TextField {...input} label="Title" fullWidth required variant="outlined" />
+                        <TextField
+                          {...input}
+                          autoFocus
+                          label="Title"
+                          fullWidth
+                          required
+                          variant="outlined"
+                        />
                       )}
                     </Field>
                   </Grid>
