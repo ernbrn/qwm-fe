@@ -7,6 +7,7 @@ import {
 import { throttle } from 'throttle-debounce';
 import { getCreators, postCreators } from 'creators/creators.service';
 import CreatorModal from 'creator-form/CreatorModal';
+import SelectedItems from 'shared/multi-select/SelectedItems';
 
 export default function CreatorSelect({ input, placeholder }) {
   const ADD_CREATOR = 'addCreator';
@@ -115,10 +116,11 @@ export default function CreatorSelect({ input, placeholder }) {
 
           return (
             <div>
-              {selectedItems
-                && selectedItems.map(si => (
-                  <Chip key={si.id} label={si.name} onDelete={handleDelete(si.id)} />
-                ))}
+              <div>
+                {selectedItems && (
+                  <SelectedItems selectedItems={selectedItems} handleDelete={handleDelete} />
+                )}
+              </div>
               <TextField
                 InputLabelProps={getLabelProps({ shrink: true })}
                 InputProps={{ onBlur, onFocus }}
