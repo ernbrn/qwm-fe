@@ -4,8 +4,17 @@ import { Form, Field } from 'react-final-form';
 import {
   TextField, Grid, Button, Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default function CreatorForm({ onSubmit }) {
+const useStyles = makeStyles(({ spacing }) => ({
+  cancelButton: {
+    marginRight: spacing(2),
+  },
+}));
+
+export default function CreatorForm({ onSubmit, onCancel }) {
+  const classes = useStyles();
+
   function callOnSubmit(data) {
     return onSubmit(data).catch((response) => {
       // handle the form errors here
@@ -18,17 +27,26 @@ export default function CreatorForm({ onSubmit }) {
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={4} justify="center">
-            <Grid item>
-              <Typography variant="h6">Add a creator</Typography>
-            </Grid>
             <Grid item xs={12}>
               <Field name="name">
                 {({ input }) => (
-                  <TextField {...input} label="Name" fullWidth required variant="outlined" />
+                  <TextField
+                    {...input}
+                    autoFocus
+                    label="Name"
+                    fullWidth
+                    required
+                    variant="outlined"
+                  />
                 )}
               </Field>
             </Grid>
             <Grid item>
+              {onCancel && (
+                <Button onClick={onCancel} color="primary" className={classes.cancelButton}>
+                  Cancel
+                </Button>
+              )}
               <Button type="submit" color="primary" variant="contained">
                 Save
               </Button>
@@ -42,4 +60,9 @@ export default function CreatorForm({ onSubmit }) {
 
 CreatorForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+};
+
+CreatorForm.defaultProps = {
+  onCancel: null,
 };
