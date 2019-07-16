@@ -1,9 +1,7 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
-import {
-  MenuItem, Paper, TextField,
-} from '@material-ui/core';
+import { MenuItem, Paper, TextField } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
 import { getCreators, postCreators } from 'creators/creators.service';
 import CreatorModal from 'creator-form/CreatorModal';
@@ -17,9 +15,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   listbox: {
     position: 'absolute',
     zIndex: 1,
-  },
-  boop: {
-    width: '100px',
   },
 }));
 
