@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import {
-  MenuItem, Popover, Paper, TextField,
+  MenuItem, Paper, TextField,
 } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
 import { getCreators, postCreators } from 'creators/creators.service';
