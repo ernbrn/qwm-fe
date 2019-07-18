@@ -132,11 +132,7 @@ class WorkForm extends React.Component {
                     </Grid>
                   )}
                   <Grid item xs={12}>
-                    <Field
-                      name="creator"
-                      component={CreatorSelect}
-                      placeholder="Search for a creator"
-                    />
+                    <Field name="creator" component={CreatorSelect} />
                   </Grid>
                   <Grid item>
                     <Button type="submit" color="primary" variant="contained">
