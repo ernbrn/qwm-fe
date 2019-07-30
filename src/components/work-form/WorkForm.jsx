@@ -16,18 +16,19 @@ import {
 // import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { getWorkTypesSuccess } from 'work-types/work-types.actions';
-import { getWorkTypes, postWorkTypes } from 'work-types/work-types.service';
-import { postWorks } from 'works/works.service';
+import { getWorkTypes } from 'work-types/work-types.service';
 
 // const useStyles = makeStyles(() => ({
 // }));
 
+// TODO import this from elsewhere
 const ADD_WORK_TYPE_VALUE = 'addOwn';
 
 class WorkForm extends React.Component {
   static propTypes = {
     dispatchGetWorkTypesSuccess: PropTypes.func.isRequired,
     CreatorSearch: PropTypes.func,
+    onSubmit: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -46,37 +47,11 @@ class WorkForm extends React.Component {
     });
   }
 
-  onSubmit = (formData) => {
-    console.log(formData);
-    const data = { ...formData };
-
-    if (data.work_type_id !== ADD_WORK_TYPE_VALUE) {
-      delete data.workTypeName;
-    }
-
-    // if (data.workTypeName) {
-    //   return postWorkTypes({ name: data.workTypeName }).then(response => postWorks({
-    //     title: data.title,
-    //     work_type_id: response.data.id,
-    //     // attn post through users so as not to have to do this
-    //     // slash api will know who the current user is and assign
-    //     contributor_id: 4,
-    //   }).then(workResponse => console.log(workResponse)));
-    // }
-
-    // return postWorks({
-    //   ...data,
-    //   // attn post through users so as not to have to do this
-    //   // slash api will know who the current user is and assign
-    //   contributor_id: 4,
-    // });
-  };
-
   render() {
     const { workTypes } = this.state;
-    const { CreatorSearch } = this.props;
+    const { CreatorSearch, onSubmit } = this.props;
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form onSubmit={onSubmit}>
         {({ handleSubmit, values }) => (
           <Card>
             <CardContent>
