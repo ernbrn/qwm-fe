@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { getWorkTypesSuccess } from 'work-types/work-types.actions';
 import { getWorkTypes, postWorkTypes } from 'work-types/work-types.service';
 import { postWorks } from 'works/works.service';
-import CreatorSelect from './CreatorSelect';
 
 // const useStyles = makeStyles(() => ({
 // }));
@@ -28,6 +27,11 @@ const ADD_WORK_TYPE_VALUE = 'addOwn';
 class WorkForm extends React.Component {
   static propTypes = {
     dispatchGetWorkTypesSuccess: PropTypes.func.isRequired,
+    CreatorSearch: PropTypes.func,
+  };
+
+  static defaultProps = {
+    CreatorSearch: null,
   };
 
   state = {
@@ -70,6 +74,7 @@ class WorkForm extends React.Component {
 
   render() {
     const { workTypes } = this.state;
+    const { CreatorSearch } = this.props;
     return (
       <Form onSubmit={this.onSubmit}>
         {({ handleSubmit, values }) => (
@@ -131,9 +136,11 @@ class WorkForm extends React.Component {
                       </Field>
                     </Grid>
                   )}
-                  <Grid item xs={12}>
-                    <Field name="creator" component={CreatorSelect} />
-                  </Grid>
+                  {CreatorSearch && (
+                    <Grid item xs={12}>
+                      <Field name="creator" component={CreatorSearch} />
+                    </Grid>
+                  )}
                   <Grid item>
                     <Button type="submit" color="primary" variant="contained">
                       Submit

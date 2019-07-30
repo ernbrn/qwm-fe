@@ -14,7 +14,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 export default function FormModal({
-  open, handleClose, onSubmit, Form, title,
+  open, handleClose, Form, title,
 }) {
   const classes = useStyles();
 
@@ -24,7 +24,7 @@ export default function FormModal({
       <DialogContent className={classes.content}>
         <Grid container spacing={4} justify="center">
           <Grid item>
-            <Form onSubmit={onSubmit} onCancel={handleClose} />
+            <Form />
           </Grid>
         </Grid>
       </DialogContent>
@@ -34,7 +34,6 @@ export default function FormModal({
 
 FormModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   Form: PropTypes.func.isRequired,
   // Can make this optional

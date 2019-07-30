@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import { MenuItem, Paper, TextField } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
-// import { getCreators, postCreators } from 'creators/creators.service';
-// import CreatorModal from 'creator-form/CreatorModal';
 import SelectedItems from 'shared/multi-select/SelectedItems';
 import { makeStyles } from '@material-ui/core/styles';
+import { display } from '@material-ui/system';
 
 const useStyles = makeStyles(({ spacing }) => ({
   selectedItems: {
@@ -20,16 +19,17 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export default function CrazySelect({
   input,
-  placeholder,
-  label,
+  searchPlaceholder,
+  searchLabel,
   addNewText,
   getResource,
   postNewResource,
   AddNewModal,
+  displayAttribute,
 }) {
   const ADD_NEW = 'addNew';
   const itemToString = item => item || '';
-  const noResultsItem = { id: ADD_NEW, name: addNewText };
+  const noResultsItem = { id: ADD_NEW, [displayAttribute]: addNewText };
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -124,7 +124,7 @@ export default function CrazySelect({
         }) => {
           const { onBlur, onFocus, ...inputProps } = getInputProps({
             name: input.name,
-            placeholder,
+            placeholder: searchPlaceholder,
           });
 
           return (
@@ -134,6 +134,7 @@ export default function CrazySelect({
                   selectedItems={selectedItems}
                   handleDelete={handleDelete}
                   className={classes.selectedItems}
+                  displayAttribute={displayAttribute}
                 />
               )}
               <TextField
@@ -141,7 +142,7 @@ export default function CrazySelect({
                 InputProps={{ onBlur, onFocus }}
                 {...inputProps}
                 fullWidth
-                label={label}
+                label={searchLabel}
               />
               <div {...getMenuProps()} className={classes.listbox}>
                 {isOpen && (
@@ -153,7 +154,7 @@ export default function CrazySelect({
                         selected={highlightedIndex === index}
                         component="div"
                       >
-                        {item.name}
+                        {item[displayAttribute]}
                       </MenuItem>
                     ))}
                   </Paper>
@@ -168,11 +169,15 @@ export default function CrazySelect({
 }
 
 CrazySelect.propTypes = {
-  input: PropTypes.shape({}).isRequired,
-  placeholder: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  input: PropTypes.shape({
+    onChange: PropTypes.func.isRequired,
+    name: PropTypes.string,
+  }).isRequired,
+  searchPlaceholder: PropTypes.string.isRequired,
+  searchLabel: PropTypes.string.isRequired,
   addNewText: PropTypes.string.isRequired,
   getResource: PropTypes.func.isRequired,
   postNewResource: PropTypes.func.isRequired,
   AddNewModal: PropTypes.func.isRequired,
+  displayAttribute: PropTypes.string.isRequired,
 };

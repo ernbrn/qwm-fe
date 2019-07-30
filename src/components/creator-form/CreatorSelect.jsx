@@ -8,14 +8,13 @@ function CreatorSelect({ input }) {
   return (
     <CrazySelect
       input={input}
-      // rename this search placeholder
-      placeholder="Search for creator"
-      // rename this search label
-      label="Creator"
+      searchPlaceholder="Search for creator"
+      searchLabel="Creator"
       addNewText="Add new creator"
       getResource={getCreators}
       postNewResource={postCreators}
       AddNewModal={CreatorModal}
+      displayAttribute="name"
     />
   );
 }
