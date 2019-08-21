@@ -10,7 +10,6 @@ const ADD_WORK_TYPE_VALUE = 'addOwn';
 
 export default function AddWork() {
   function onSubmit(formData) {
-    console.log(formData);
     const data = { ...formData };
 
     if (data.work_type_id !== ADD_WORK_TYPE_VALUE) {
@@ -21,18 +20,10 @@ export default function AddWork() {
       return postWorkTypes({ name: data.workTypeName }).then(response => postWorks({
         title: data.title,
         work_type_id: response.data.id,
-        // attn post through users so as not to have to do this
-        // slash api will know who the current user is and assign
-        contributor_id: 4,
       }).then(workResponse => console.log(workResponse)));
     }
 
-    return postWorks({
-      ...data,
-      // attn post through users so as not to have to do this
-      // slash api will know who the current user is and assign
-      contributor_id: 4,
-    });
+    return postWorks(data);
   }
 
   return (
