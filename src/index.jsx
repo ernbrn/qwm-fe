@@ -1,9 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from 'App';
+import apiClient from 'api-client';
 
 const rootElement = document.getElementById('root');
 
-render((
-  <App />
-), rootElement);
+apiClient.setAuthorizationHeader(localStorage.getItem('jwt'));
+
+render(<App />, rootElement);
