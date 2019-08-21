@@ -20,7 +20,7 @@ export default function FormModal({
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose} TransitionComponent={Transition}>
-      <DialogTitle>{title}</DialogTitle>
+      {title && <DialogTitle>{title}</DialogTitle>}
       <DialogContent className={classes.content}>
         <Grid container spacing={4} justify="center">
           <Grid item>
@@ -36,6 +36,9 @@ FormModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   Form: PropTypes.func.isRequired,
-  // Can make this optional
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
+};
+
+FormModal.defaultProps = {
+  title: '',
 };
