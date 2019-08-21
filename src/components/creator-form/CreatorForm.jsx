@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Field } from 'react-final-form';
-import {
-  TextField, Grid, Button, Typography,
-} from '@material-ui/core';
+import { TextField, Grid, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -12,7 +10,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export default function CreatorForm({ onSubmit, onCancel }) {
+export default function CreatorForm({ onSubmit, onCancel, WorkSearch }) {
   const classes = useStyles();
 
   function callOnSubmit(data) {
@@ -41,6 +39,11 @@ export default function CreatorForm({ onSubmit, onCancel }) {
                 )}
               </Field>
             </Grid>
+            {WorkSearch && (
+              <Grid item xs={12}>
+                <Field name="work" component={WorkSearch} />
+              </Grid>
+            )}
             <Grid item>
               {onCancel && (
                 <Button onClick={onCancel} color="primary" className={classes.cancelButton}>
@@ -61,8 +64,10 @@ export default function CreatorForm({ onSubmit, onCancel }) {
 CreatorForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func,
+  WorkSearch: PropTypes.func,
 };
 
 CreatorForm.defaultProps = {
   onCancel: null,
+  WorkSearch: null,
 };

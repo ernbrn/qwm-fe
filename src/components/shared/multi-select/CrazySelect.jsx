@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import { MenuItem, Paper, TextField } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
-import { getCreators, postCreators } from 'creators/creators.service';
-import CreatorModal from 'creator-form/CreatorModal';
 import SelectedItems from 'shared/multi-select/SelectedItems';
 import { makeStyles } from '@material-ui/core/styles';
+import { ADD_NEW } from 'application.constants';
 
 const useStyles = makeStyles(({ spacing }) => ({
   selectedItems: {
@@ -18,36 +17,44 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export default function CreatorSelect({ input, placeholder }) {
-  const ADD_CREATOR = 'addCreator';
+export default function CrazySelect({
+  input,
+  searchPlaceholder,
+  searchLabel,
+  addNewText,
+  getResource,
+  postNewResource,
+  AddNewModal,
+  displayAttribute,
+}) {
   const itemToString = item => item || '';
-  const noResultsItem = { id: ADD_CREATOR, name: 'Add new creator' };
+  const noResultsItem = { id: ADD_NEW, [displayAttribute]: addNewText };
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [addCreatorModalOpen, setAddCreatorModalOpen] = useState(false);
+  const [addNewModalOpen, setAddNewModalOpen] = useState(false);
   const { onChange, ...restInput } = input;
   const classes = useStyles();
 
-  function searchCreators(inputChange) {
-    // Don't get all creators if there's no value
+  function searchResource(inputChange) {
+    // Don't get all items if there's no value
     if (!inputChange) {
       return null;
     }
 
-    return getCreators({ name: inputChange }).then((response) => {
+    return getResource({ name: inputChange }).then((response) => {
       setItems([...response.data, noResultsItem]);
     });
   }
 
-  const throttleSearch = useRef(throttle(500, searchCreators)).current;
+  const throttleSearch = useRef(throttle(500, searchResource)).current;
 
   function handleSelection(selectValue) {
     // On selection, clear out the input value to reset the search
     setInputValue('');
 
-    if (selectValue.id === ADD_CREATOR) {
-      setAddCreatorModalOpen(true);
+    if (selectValue.id === ADD_NEW) {
+      setAddNewModalOpen(true);
       return;
     }
 
@@ -60,32 +67,28 @@ export default function CreatorSelect({ input, placeholder }) {
     });
   }
 
-  const handleDelete = selectedCreatorId => () => {
+  const handleDelete = selectedId => () => {
     setSelectedItems((prevState) => {
-      const newSelectedItems = prevState.filter(i => i.id !== selectedCreatorId);
+      const newSelectedItems = prevState.filter(i => i.id !== selectedId);
       onChange(newSelectedItems);
       return newSelectedItems;
     });
   };
 
-  function onCreatorSubmit(formData) {
-    return postCreators(formData).then((response) => {
-      setAddCreatorModalOpen(false);
+  function onAddSubmit(formData) {
+    return postNewResource(formData).then((response) => {
+      setAddNewModalOpen(false);
       handleSelection(response.data);
     });
   }
 
-  function handleCreatorModalClose() {
-    setAddCreatorModalOpen(false);
+  function handleModalClose() {
+    setAddNewModalOpen(false);
   }
 
   return (
     <React.Fragment>
-      <CreatorModal
-        onSubmit={onCreatorSubmit}
-        open={addCreatorModalOpen}
-        handleClose={handleCreatorModalClose}
-      />
+      <AddNewModal onSubmit={onAddSubmit} open={addNewModalOpen} handleClose={handleModalClose} />
       <Downshift
         {...restInput}
         defaultHighlightedIndex={0}
@@ -120,7 +123,7 @@ export default function CreatorSelect({ input, placeholder }) {
         }) => {
           const { onBlur, onFocus, ...inputProps } = getInputProps({
             name: input.name,
-            placeholder,
+            placeholder: searchPlaceholder,
           });
 
           return (
@@ -130,6 +133,7 @@ export default function CreatorSelect({ input, placeholder }) {
                   selectedItems={selectedItems}
                   handleDelete={handleDelete}
                   className={classes.selectedItems}
+                  displayAttribute={displayAttribute}
                 />
               )}
               <TextField
@@ -137,7 +141,7 @@ export default function CreatorSelect({ input, placeholder }) {
                 InputProps={{ onBlur, onFocus }}
                 {...inputProps}
                 fullWidth
-                label="Creator"
+                label={searchLabel}
               />
               <div {...getMenuProps()} className={classes.listbox}>
                 {isOpen && (
@@ -149,7 +153,7 @@ export default function CreatorSelect({ input, placeholder }) {
                         selected={highlightedIndex === index}
                         component="div"
                       >
-                        {item.name}
+                        {item[displayAttribute]}
                       </MenuItem>
                     ))}
                   </Paper>
@@ -163,7 +167,16 @@ export default function CreatorSelect({ input, placeholder }) {
   );
 }
 
-CreatorSelect.propTypes = {
-  input: PropTypes.shape({}).isRequired,
-  placeholder: PropTypes.string.isRequired,
+CrazySelect.propTypes = {
+  input: PropTypes.shape({
+    onChange: PropTypes.func.isRequired,
+    name: PropTypes.string,
+  }).isRequired,
+  searchPlaceholder: PropTypes.string.isRequired,
+  searchLabel: PropTypes.string.isRequired,
+  addNewText: PropTypes.string.isRequired,
+  getResource: PropTypes.func.isRequired,
+  postNewResource: PropTypes.func.isRequired,
+  AddNewModal: PropTypes.func.isRequired,
+  displayAttribute: PropTypes.string.isRequired,
 };

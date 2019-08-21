@@ -13,21 +13,20 @@ import {
   MenuItem,
   OutlinedInput,
 } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { getWorkTypesSuccess } from 'work-types/work-types.actions';
-import { getWorkTypes, postWorkTypes } from 'work-types/work-types.service';
-import { postWorks } from 'works/works.service';
-import CreatorSelect from './CreatorSelect';
-
-// const useStyles = makeStyles(() => ({
-// }));
-
-const ADD_WORK_TYPE_VALUE = 'addOwn';
+import { getWorkTypes } from 'work-types/work-types.service';
+import { ADD_NEW } from 'application.constants';
 
 class WorkForm extends React.Component {
   static propTypes = {
     dispatchGetWorkTypesSuccess: PropTypes.func.isRequired,
+    CreatorSearch: PropTypes.func,
+    onSubmit: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    CreatorSearch: null,
   };
 
   state = {
@@ -42,36 +41,11 @@ class WorkForm extends React.Component {
     });
   }
 
-  onSubmit = (formData) => {
-    console.log(formData);
-    const data = { ...formData };
-
-    if (data.work_type_id !== ADD_WORK_TYPE_VALUE) {
-      delete data.workTypeName;
-    }
-
-    // if (data.workTypeName) {
-    //   return postWorkTypes({ name: data.workTypeName }).then(response => postWorks({
-    //     title: data.title,
-    //     work_type_id: response.data.id,
-    //     // attn post through users so as not to have to do this
-    //     // slash api will know who the current user is and assign
-    //     contributor_id: 4,
-    //   }).then(workResponse => console.log(workResponse)));
-    // }
-
-    // return postWorks({
-    //   ...data,
-    //   // attn post through users so as not to have to do this
-    //   // slash api will know who the current user is and assign
-    //   contributor_id: 4,
-    // });
-  };
-
   render() {
     const { workTypes } = this.state;
+    const { CreatorSearch, onSubmit } = this.props;
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form onSubmit={onSubmit}>
         {({ handleSubmit, values }) => (
           <Card>
             <CardContent>
@@ -108,7 +82,7 @@ class WorkForm extends React.Component {
                                 {workType.name}
                               </MenuItem>
                             ))}
-                            <MenuItem value={ADD_WORK_TYPE_VALUE}>
+                            <MenuItem value={ADD_NEW}>
                               I don't see the right type. Add my own.
                             </MenuItem>
                           </Select>
@@ -116,7 +90,7 @@ class WorkForm extends React.Component {
                       )}
                     </Field>
                   </Grid>
-                  {values.work_type_id === ADD_WORK_TYPE_VALUE && (
+                  {values.work_type_id === ADD_NEW && (
                     <Grid item xs={12}>
                       <Field name="workTypeName">
                         {({ input }) => (
@@ -131,13 +105,11 @@ class WorkForm extends React.Component {
                       </Field>
                     </Grid>
                   )}
-                  <Grid item xs={12}>
-                    <Field
-                      name="creator"
-                      component={CreatorSelect}
-                      placeholder="Search for a creator"
-                    />
-                  </Grid>
+                  {CreatorSearch && (
+                    <Grid item xs={12}>
+                      <Field name="creator" component={CreatorSearch} />
+                    </Grid>
+                  )}
                   <Grid item>
                     <Button type="submit" color="primary" variant="contained">
                       Submit

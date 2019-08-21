@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FormModal from 'shared/multi-select/FormModal';
-import CreatorForm from './CreatorForm';
+import WorkForm from './WorkForm';
 
-export default function CreatorModal({ open, handleClose, onSubmit }) {
+export default function WorkModal({ open, handleClose, onSubmit }) {
   return (
     <FormModal
       open={open}
       handleClose={handleClose}
-      Form={() => <CreatorForm onSubmit={onSubmit} onCancel={handleClose} />}
-      title="Add a creator"
+      onSubmit={onSubmit}
+      Form={() => <WorkForm onSubmit={onSubmit} onCancel={handleClose} />}
+      title="Add a work"
     />
   );
 }
 
-CreatorModal.propTypes = {
+WorkModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,

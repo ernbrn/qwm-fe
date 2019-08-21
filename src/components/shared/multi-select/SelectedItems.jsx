@@ -9,7 +9,12 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export default function SelectedItems({ selectedItems, handleDelete, className }) {
+export default function SelectedItems({
+  selectedItems,
+  handleDelete,
+  className,
+  displayAttribute,
+}) {
   const classes = useStyles();
 
   return (
@@ -17,7 +22,7 @@ export default function SelectedItems({ selectedItems, handleDelete, className }
       {selectedItems.map(selectedItem => (
         <Chip
           key={selectedItem.id}
-          label={selectedItem.name}
+          label={selectedItem[displayAttribute]}
           onDelete={handleDelete(selectedItem.id)}
           className={classes.selectedItem}
         />
@@ -30,6 +35,7 @@ SelectedItems.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleDelete: PropTypes.func.isRequired,
   className: PropTypes.string,
+  displayAttribute: PropTypes.string.isRequired,
 };
 
 SelectedItems.defaultProps = {
