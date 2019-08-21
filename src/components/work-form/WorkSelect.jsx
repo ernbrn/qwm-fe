@@ -8,8 +8,8 @@ function WorkSelect({ input }) {
   return (
     <CrazySelect
       input={input}
-      searchPlaceholder="Search for a work"
-      searchLabel="Work"
+      searchPlaceholder="Search for works"
+      searchLabel="Works"
       addNewText="Add a new work"
       getResource={getWorks}
       postNewResource={postWorks}

@@ -8,8 +8,8 @@ function CreatorSelect({ input }) {
   return (
     <CrazySelect
       input={input}
-      searchPlaceholder="Search for creator"
-      searchLabel="Creator"
+      searchPlaceholder="Search for creators"
+      searchLabel="Creators"
       addNewText="Add new creator"
       getResource={getCreators}
       postNewResource={postCreators}
