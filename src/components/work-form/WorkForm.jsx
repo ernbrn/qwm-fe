@@ -13,13 +13,9 @@ import {
   MenuItem,
   OutlinedInput,
 } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { getWorkTypesSuccess } from 'work-types/work-types.actions';
 import { getWorkTypes } from 'work-types/work-types.service';
-
-// const useStyles = makeStyles(() => ({
-// }));
 
 // TODO import this from elsewhere
 const ADD_WORK_TYPE_VALUE = 'addOwn';
