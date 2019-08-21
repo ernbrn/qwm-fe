@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.2.0",
     "axios": "^0.19.0",
     "connected-react-router": "^6.4.0",
+    "downshift": "^3.2.10",
     "file-loader": "^4.0.0",
     "final-form": "^4.16.1",
     "history": "^4.9.0",
@@ -23,6 +24,7 @@
     "redux-logger": "^3.0.6",
     "redux-logic": "^2.1.1",
     "reselect": "^4.0.0",
+    "throttle-debounce": "^2.1.0",
     "webpack": "^4.34.0",
     "webpack-cli": "^3.3.4",
     "webpack-merge": "^4.2.1"
