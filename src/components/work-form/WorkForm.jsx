@@ -16,9 +16,7 @@ import {
 import { connect } from 'react-redux';
 import { getWorkTypesSuccess } from 'work-types/work-types.actions';
 import { getWorkTypes } from 'work-types/work-types.service';
-
-// TODO import this from elsewhere
-const ADD_WORK_TYPE_VALUE = 'addOwn';
+import { ADD_NEW } from 'application.constants';
 
 class WorkForm extends React.Component {
   static propTypes = {
@@ -84,7 +82,7 @@ class WorkForm extends React.Component {
                                 {workType.name}
                               </MenuItem>
                             ))}
-                            <MenuItem value={ADD_WORK_TYPE_VALUE}>
+                            <MenuItem value={ADD_NEW}>
                               I don't see the right type. Add my own.
                             </MenuItem>
                           </Select>
@@ -92,7 +90,7 @@ class WorkForm extends React.Component {
                       )}
                     </Field>
                   </Grid>
-                  {values.work_type_id === ADD_WORK_TYPE_VALUE && (
+                  {values.work_type_id === ADD_NEW && (
                     <Grid item xs={12}>
                       <Field name="workTypeName">
                         {({ input }) => (

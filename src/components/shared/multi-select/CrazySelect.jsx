@@ -5,7 +5,7 @@ import { MenuItem, Paper, TextField } from '@material-ui/core';
 import { throttle } from 'throttle-debounce';
 import SelectedItems from 'shared/multi-select/SelectedItems';
 import { makeStyles } from '@material-ui/core/styles';
-import { display } from '@material-ui/system';
+import { ADD_NEW } from 'application.constants';
 
 const useStyles = makeStyles(({ spacing }) => ({
   selectedItems: {
@@ -27,7 +27,6 @@ export default function CrazySelect({
   AddNewModal,
   displayAttribute,
 }) {
-  const ADD_NEW = 'addNew';
   const itemToString = item => item || '';
   const noResultsItem = { id: ADD_NEW, [displayAttribute]: addNewText };
   const [items, setItems] = useState([]);

@@ -4,15 +4,13 @@ import { Card, CardContent } from '@material-ui/core';
 import CreatorSearch from 'creator-form/CreatorSelect';
 import { postWorks } from 'works/works.service';
 import { postWorkTypes } from 'work-types/work-types.service';
-
-// TODO import this from elsewhere
-const ADD_WORK_TYPE_VALUE = 'addOwn';
+import { ADD_NEW } from 'application.constants';
 
 export default function AddWork() {
   function onSubmit(formData) {
     const data = { ...formData };
 
-    if (data.work_type_id !== ADD_WORK_TYPE_VALUE) {
+    if (data.work_type_id !== ADD_NEW) {
       delete data.workTypeName;
     }
 
