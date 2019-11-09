@@ -25,10 +25,6 @@ export default function AddWork() {
   }
 
   return (
-    <Card>
-      <CardContent>
-        <WorkForm onSubmit={onSubmit} CreatorSearch={CreatorSearch} />
-      </CardContent>
-    </Card>
+    <WorkForm onSubmit={onSubmit} CreatorSearch={CreatorSearch} />
   );
 }
