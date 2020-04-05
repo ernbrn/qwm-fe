@@ -1,6 +1,5 @@
 import React from 'react';
 import WorkForm from 'work-form/WorkForm';
-import { Card, CardContent } from '@material-ui/core';
 import CreatorSearch from 'creator-form/CreatorSelect';
 import { postWorks } from 'works/works.service';
 import { postWorkTypes } from 'work-types/work-types.service';
@@ -25,10 +24,6 @@ export default function AddWork() {
   }
 
   return (
-    <Card>
-      <CardContent>
-        <WorkForm onSubmit={onSubmit} CreatorSearch={CreatorSearch} />
-      </CardContent>
-    </Card>
+    <WorkForm onSubmit={onSubmit} CreatorSearch={CreatorSearch} />
   );
 }

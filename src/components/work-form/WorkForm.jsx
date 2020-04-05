@@ -44,6 +44,11 @@ class WorkForm extends React.Component {
   render() {
     const { workTypes } = this.state;
     const { CreatorSearch, onSubmit } = this.props;
+
+    function formSubmit(data) {
+      return onSubmit(data).then(() => {});
+    }
+
     return (
       <Form onSubmit={onSubmit}>
         {({ handleSubmit, values }) => (

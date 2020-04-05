@@ -5,7 +5,7 @@ import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles({
   container: {
-    minHeight: '100vh',
+    minHeight: 'calc(100vh - 64px)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -16,11 +16,7 @@ const useStyles = makeStyles({
 function CenteredAppContainer({ children }) {
   const classes = useStyles();
 
-  return (
-    <Container className={classes.container}>
-      {children}
-    </Container>
-  );
+  return <Container className={classes.container}>{children}</Container>;
 }
 
 CenteredAppContainer.propTypes = {
