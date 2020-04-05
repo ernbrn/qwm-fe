@@ -1,5 +1,6 @@
 import React from 'react';
+import ReferenceForm from 'reference-form/ReferenceForm';
 
 export default function AddReference() {
-  return <div>Add a reference</div>;
+  return <ReferenceForm />;
 }
