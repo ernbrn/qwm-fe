@@ -4,6 +4,10 @@ export function getWorks(params = {}) {
   return apiClient.get('/works', { params });
 }
 
+export function getWork(id, params = {}) {
+  return apiClient.get(`/works/${id}`, { params });
+}
+
 export function postWorks(work) {
   const payload = { work };
 

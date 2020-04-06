@@ -71,7 +71,10 @@ class WorkForm extends React.Component {
                     </Field>
                   </Grid>
                   <Grid item xs={12}>
-                    <Field name="work_type_id" initialValue={workTypes.length && workTypes[0].id}>
+                    <Field
+                      name="work_type_id"
+                      initialValue={workTypes.length && workTypes[0].id}
+                    >
                       {({ input, meta }) => (
                         <FormControl fullWidth>
                           <InputLabel variant="outlined" htmlFor={input.name}>
@@ -112,7 +115,7 @@ class WorkForm extends React.Component {
                   )}
                   {CreatorSearch && (
                     <Grid item xs={12}>
-                      <Field name="creator" component={CreatorSearch} />
+                      <Field name="creators" component={CreatorSearch} />
                     </Grid>
                   )}
                   <Grid item>
@@ -130,9 +133,6 @@ class WorkForm extends React.Component {
   }
 }
 
-export default connect(
-  null,
-  {
-    dispatchGetWorkTypesSuccess: getWorkTypesSuccess,
-  },
-)(WorkForm);
+export default connect(null, {
+  dispatchGetWorkTypesSuccess: getWorkTypesSuccess,
+})(WorkForm);

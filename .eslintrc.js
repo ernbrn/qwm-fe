@@ -1,38 +1,32 @@
 module.exports = {
-  "plugins": [
-    "jest"
-  ],
-  "extends": [
-    "airbnb",
-    "plugin:jest/recommended",
-    "plugin:jest/style"
-  ],
-  "parser": "babel-eslint",
-  "settings": {
+  plugins: ["jest"],
+  extends: ["airbnb", "plugin:jest/recommended", "plugin:jest/style"],
+  parser: "babel-eslint",
+  settings: {
     "import/resolver": {
-      "webpack": {
-        "config": "webpack.common.js"
+      webpack: {
+        config: "webpack.common.js"
       }
     }
   },
-  "env": {
-    "browser": true
+  env: {
+    browser: true
   },
-  "rules": {
+  rules: {
     "jest/consistent-test-it": 2
   },
-  "overrides": [
+  overrides: [
     {
-      "files": [
+      files: [
         "*.actions.js",
         "*.service.js",
         "*.constants.js",
         "*.logic.js",
         "*.helpers.js"
       ],
-      "rules": {
+      rules: {
         "import/prefer-default-export": "off"
       }
     }
   ]
-}
+};
