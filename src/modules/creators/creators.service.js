@@ -13,3 +13,9 @@ export function postCreators(creator) {
 
   return apiClient.post('/creators', payload);
 }
+
+export function patchCreator(id, creator) {
+  const payload = { creator };
+
+  return apiClient.patch(`/creators/${id}`, payload);
+}

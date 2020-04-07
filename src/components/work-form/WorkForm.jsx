@@ -23,10 +23,12 @@ class WorkForm extends React.Component {
     dispatchGetWorkTypesSuccess: PropTypes.func.isRequired,
     CreatorSearch: PropTypes.func,
     onSubmit: PropTypes.func.isRequired,
+    work: PropTypes.shape({ title: PropTypes.string }),
   };
 
   static defaultProps = {
     CreatorSearch: null,
+    work: {},
   };
 
   state = {
@@ -43,7 +45,7 @@ class WorkForm extends React.Component {
 
   render() {
     const { workTypes } = this.state;
-    const { CreatorSearch, onSubmit } = this.props;
+    const { CreatorSearch, onSubmit, work } = this.props;
 
     function formSubmit(data) {
       return onSubmit(data).then(() => {});
@@ -57,7 +59,7 @@ class WorkForm extends React.Component {
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={4} justify="center">
                   <Grid item xs={12}>
-                    <Field name="title">
+                    <Field name="title" initialValue={work.title}>
                       {({ input }) => (
                         <TextField
                           {...input}
@@ -73,7 +75,7 @@ class WorkForm extends React.Component {
                   <Grid item xs={12}>
                     <Field
                       name="work_type_id"
-                      initialValue={workTypes.length && workTypes[0].id}
+                      initialValue={work.work_type && work.work_type.id}
                     >
                       {({ input, meta }) => (
                         <FormControl fullWidth>

@@ -12,7 +12,12 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export default function CreatorForm({ onSubmit, onCancel, WorkSearch }) {
+export default function CreatorForm({
+  onSubmit,
+  onCancel,
+  WorkSearch,
+  creator,
+}) {
   const classes = useStyles();
 
   const [errors, setErrors] = useState(0);
@@ -34,7 +39,7 @@ export default function CreatorForm({ onSubmit, onCancel, WorkSearch }) {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={4} justify="center">
             <Grid item xs={12}>
-              <Field name="name">
+              <Field name="name" initialValue={creator.name}>
                 {({ input }) => (
                   <TextField
                     id="creator-name"
@@ -84,9 +89,11 @@ CreatorForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func,
   WorkSearch: PropTypes.func,
+  creator: PropTypes.shape({}),
 };
 
 CreatorForm.defaultProps = {
   onCancel: null,
   WorkSearch: null,
+  creator: {},
 };

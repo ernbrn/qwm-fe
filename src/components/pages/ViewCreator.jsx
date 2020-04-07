@@ -44,14 +44,13 @@ class ViewCreator extends React.Component {
           <Typography variant="h2" component="h1" align="center">
             {creator.name}
           </Typography>
+          <Link to={`/creators/${creator.id}/edit`}>Edit</Link>
           {creator.works && (
             <React.Fragment>
               <Typography variant="h4">Works</Typography>
               {creator.works.map(work => (
-                <div>
-                  <Link to={`/works/${work.id}`} key={work.id}>
-                    {work.title}
-                  </Link>
+                <div key={work.id}>
+                  <Link to={`/works/${work.id}`}>{work.title}</Link>
                 </div>
               ))}
             </React.Fragment>

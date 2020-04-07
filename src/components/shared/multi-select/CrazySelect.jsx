@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import { MenuItem, Paper, TextField } from '@material-ui/core';
@@ -26,15 +26,21 @@ export default function CrazySelect({
   postNewResource,
   AddNewModal,
   displayAttribute,
+  incomingSelectedItems,
 }) {
   const itemToString = item => item || '';
   const noResultsItem = { id: ADD_NEW, [displayAttribute]: addNewText };
   const [items, setItems] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState(incomingSelectedItems);
   const [inputValue, setInputValue] = useState('');
   const [addNewModalOpen, setAddNewModalOpen] = useState(false);
   const { onChange, ...restInput } = input;
   const classes = useStyles();
+
+  // Update the input value with incoming initial selections
+  useEffect(() => {
+    onChange(incomingSelectedItems);
+  }, []);
 
   function searchResource(inputChange) {
     // Don't get all items if there's no value
@@ -60,7 +66,10 @@ export default function CrazySelect({
 
     setSelectedItems((prevState) => {
       // TODO: this might could use a refactor to something more efficent
-      const allSelected = [...prevState.filter(i => i.id !== selectValue.id), selectValue];
+      const allSelected = [
+        ...prevState.filter(i => i.id !== selectValue.id),
+        selectValue,
+      ];
       onChange(allSelected);
 
       return allSelected;
@@ -88,7 +97,11 @@ export default function CrazySelect({
 
   return (
     <React.Fragment>
-      <AddNewModal onSubmit={onAddSubmit} open={addNewModalOpen} handleClose={handleModalClose} />
+      <AddNewModal
+        onSubmit={onAddSubmit}
+        open={addNewModalOpen}
+        handleClose={handleModalClose}
+      />
       <Downshift
         {...restInput}
         defaultHighlightedIndex={0}
@@ -179,4 +192,9 @@ CrazySelect.propTypes = {
   postNewResource: PropTypes.func.isRequired,
   AddNewModal: PropTypes.func.isRequired,
   displayAttribute: PropTypes.string.isRequired,
+  // incomingSelectedItems: PropTypes.shape([]),
+};
+
+CrazySelect.defaultProps = {
+  incomingSelectedItems: [],
 };

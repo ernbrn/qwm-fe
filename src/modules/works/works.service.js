@@ -8,6 +8,11 @@ export function getWork(id, params = {}) {
   return apiClient.get(`/works/${id}`, { params });
 }
 
+export function patchWork(id, work) {
+  const payload = { work };
+  return apiClient.patch(`/works/${id}`, payload);
+}
+
 export function postWorks(work) {
   const payload = { work };
 
