@@ -13,6 +13,28 @@ const styles = ({ spacing }) => ({
   },
 });
 
+function formatWorks(works) {
+  return works.reduce((newObject, work) => {
+    const existing = newObject[work.work_type.name] || [];
+
+    return {
+      ...newObject,
+      [work.work_type.name]: [...existing, work],
+    };
+  }, {});
+}
+
+function formatPayload(creator) {
+  return {
+    ...creator,
+    works: formatWorks(creator.works),
+  };
+}
+
+function formatWorkType(workType) {
+  return `${workType.toUpperCase()}S`;
+}
+
 class ViewCreator extends React.Component {
   static propTypes = {
     classes: PropTypes.shape({ paper: PropTypes.string.isRequired }).isRequired,
@@ -30,14 +52,15 @@ class ViewCreator extends React.Component {
   componentDidMount() {
     // eslint-disable-next-line react/destructuring-assignment
     const { id } = this.props.match.params;
-    return getCreator(id).then(({ data: creator }) => {
-      this.setState({ creator });
+    return getCreator(id).then(({ data }) => {
+      this.setState({ creator: formatPayload(data) });
     });
   }
 
   render() {
     const { creator } = this.state;
     const { classes } = this.props;
+
     return (
       <Paper className={classes.paper}>
         <div>
@@ -48,9 +71,16 @@ class ViewCreator extends React.Component {
           {creator.works && (
             <React.Fragment>
               <Typography variant="h4">Works</Typography>
-              {creator.works.map(work => (
-                <div key={work.id}>
-                  <Link to={`/works/${work.id}`}>{work.title}</Link>
+              {Object.keys(creator.works).map(workType => (
+                <div key={workType}>
+                  <Typography variant="h5">
+                    {formatWorkType(workType)}
+                  </Typography>
+                  {creator.works[workType].map(work => (
+                    <div key={work.id}>
+                      <Link to={`/works/${work.id}`}>{work.title}</Link>
+                    </div>
+                  ))}
                 </div>
               ))}
             </React.Fragment>
