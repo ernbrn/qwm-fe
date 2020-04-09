@@ -10,7 +10,7 @@ function CreatorSelect({ input, existingCreators }) {
       input={input}
       searchPlaceholder="Search for creators"
       searchLabel="Creators of this work"
-      addNewText="Add new creator"
+      addNewText="No matches! Click here to add it!"
       getResource={getCreators}
       postNewResource={postCreators}
       AddNewModal={CreatorModal}

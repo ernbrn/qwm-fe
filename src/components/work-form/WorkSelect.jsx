@@ -10,7 +10,7 @@ function WorkSelect({ input, existingWorks }) {
       input={input}
       searchPlaceholder="Search for works"
       searchLabel="Works"
-      addNewText="Add a new work"
+      addNewText="No matches! Click here to add it!"
       getResource={getWorks}
       postNewResource={postWorks}
       AddNewModal={WorkModal}
